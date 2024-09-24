@@ -17,13 +17,13 @@ class MatrixController():
         self._matrix.SetImage(self._current_image)
 
     def fade_in(self, image, delay=0.001, max_brightness=100):
-        while self._matrix.brightness <= max_brightness:
+        while self._matrix.brightness < max_brightness:
             self._matrix.brightness += 1
             self._matrix.SetImage(image)
             sleep(delay)
 
     def fade_out(self, image, delay=0.001, min_brightness=0):
-        while self._matrix.brightness >= min_brightness:
+        while self._matrix.brightness > min_brightness:
             self._matrix.brightness -= 1
             self._matrix.SetImage(image)
             sleep(delay)
