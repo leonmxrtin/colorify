@@ -13,6 +13,7 @@ class MatrixController():
 
         self._matrix = RGBMatrix(options=self._options)
         self._current_image = Image.new('RGB', (self._matrix.width, self._matrix.height))
+        self._matrix.SetImage(self._current_image)
 
     def fade_in(self, image, delay=0.001, max_brightness=100):
         while self._matrix.brightness <= max_brightness:
