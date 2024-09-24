@@ -12,12 +12,14 @@ client = SpotifyClient(config['Spotify']['ClientID'], config['Spotify']['ClientS
 
 matrix_controller = MatrixController(int(config['Matrix']['Size']), config['Matrix']['Mapping'])
 
+prev_artwork_url = ""
 while True:
     is_playing, artwork_url, timestamp = client.get_currently_playing()
 
     if not is_playing and time_ns()//1000000 > timestamp + int(config['General']['PauseTimeout']) * 1000:
         matrix_controller.clear()
-    elif is_playing:
+    elif is_playing and artwork_url != prev_artwork_url:
+        prev_artwork_url = artwork_url
         matrix_controller.set_image_url(artwork_url)
     else:
         matrix_controller.dim(int(config['General']['PauseBrightness']))

@@ -34,12 +34,9 @@ class MatrixController():
         if image.size != (self._matrix.width, self._matrix.height):
             image = image.resize((self._matrix.width, self._matrix.height), resample=Image.Resampling.LANCZOS).convert('RGB')
 
-        if self._current_image != image:
-            self.fade_out(self._current_image)
-            self.fade_in(image)
-            self._current_image = image
-        elif self._matrix.brightness != brightness:
-            self.fade_in(image)
+        self.fade_out(self._current_image)
+        self.fade_in(image, brightness)
+        self._current_image = image
 
     def set_image_url(self, url):
         image = Image.open(requests.get(url, stream=True).raw)
