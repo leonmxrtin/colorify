@@ -2,7 +2,8 @@ import spotipy
 
 class SpotifyClient():
     def __init__(self, client_id, client_secret, redirect_uri, scope):
-        self._oauth = spotipy.oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri, scope=scope)
+        self._oauth = spotipy.oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri, scope=scope, open_browser=False)
+        print(self._oauth.get_authorize_url())
         self._spotify = spotipy.Spotify(auth_manager=self._oauth)
 
     def get_currently_playing(self):
