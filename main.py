@@ -1,14 +1,12 @@
-# initialize matrix to drop privileges as soon as possible
-from time import time_ns, sleep
 from rgb import MatrixController
+from spotify import SpotifyClient
+
+from time import time_ns, sleep
 from configparser import ConfigParser
 
 config = ConfigParser()
 config.read('config.ini')
 
-matrix_controller = MatrixController(int(config['Matrix']['Size']), config['Matrix']['Mapping'])
-
-from spotify import SpotifyClient
 client = SpotifyClient(config['Spotify']['ClientID'], config['Spotify']['ClientSecret'], 
                        config['Spotify']['RedirectURI'], config['Spotify']['Scope'])
 
