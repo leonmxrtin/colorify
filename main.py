@@ -21,7 +21,7 @@ while True:
         matrix_controller.set_image_url(artwork_url)
     elif not is_playing and time_ns()//1000000 < timestamp + int(config['General']['PauseTimeout']) * 1000:
         matrix_controller.dim(int(config['General']['PauseBrightness']))
-    else:
+    elif not is_playing:
         matrix_controller.clear()
     
     sleep(1)
