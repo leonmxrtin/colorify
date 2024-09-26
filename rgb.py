@@ -33,6 +33,9 @@ class MatrixController():
     def dim(self, brightness):
         self.fade_out(self._current_image, min_brightness=brightness)
 
+    def brighten(self, brightness=100):
+        self.fade_in(self._current_image, max_brightness=brightness)
+
     def set_image(self, image, brightness=100):
         if image.size != (self._matrix.width, self._matrix.height):
             image = image.resize((self._matrix.width, self._matrix.height), resample=Image.Resampling.LANCZOS).convert('RGB')
