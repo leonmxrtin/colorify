@@ -11,7 +11,7 @@ class MatrixController():
         self._options.parallel = 1
         self._options.hardware_mapping = mapping
         self._options.led_rgb_sequence = "BRG"
-        self._options.gpio_slowdown = 0
+#       self._options.gpio_slowdown = 0
         self._options.drop_privileges=False
 
         self._matrix = RGBMatrix(options=self._options)
