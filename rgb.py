@@ -40,7 +40,7 @@ class MatrixController():
         if image.size != (self._matrix.width, self._matrix.height):
             image = image.resize((self._matrix.width, self._matrix.height), resample=Image.Resampling.LANCZOS).convert('RGB')
 
-        self.fade_out(self._current_image)
+        self.dim()
         self.fade_in(image, max_brightness=brightness)
         self._current_image = image
 
