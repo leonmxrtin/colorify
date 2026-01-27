@@ -1,6 +1,9 @@
 from rgb import MatrixController
 from spotify import SpotifyClient
 
+import requests
+from PIL import Image
+
 from time import time_ns, sleep
 from configparser import ConfigParser
 
@@ -21,7 +24,9 @@ while True:
     if is_playing and artwork_url != prev_artwork_url: # playing new track
         paused = False
         prev_artwork_url = artwork_url
-        matrix_controller.set_image_url(artwork_url)
+        artwork = client.fetch_artwork(artwork_url)
+
+        matrix_controller.transition(artwork)
     elif is_playing and paused: # resumed playing
         paused = False
         matrix_controller.brighten()
@@ -31,6 +36,6 @@ while True:
     elif not is_playing: # no track playing
         paused = False
         prev_artwork_url = ""
-        matrix_controller.clear()
+        matrix_controller.dim()
     
-    sleep(1)
+    sleep(5)
