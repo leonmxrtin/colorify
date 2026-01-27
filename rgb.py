@@ -1,4 +1,3 @@
-import requests
 from time import sleep
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
@@ -7,46 +6,35 @@ class MatrixController():
     def __init__(self, size, mapping):
         self._options = RGBMatrixOptions()
         self._options.rows = self._options.cols = size
-        self._options.chain_length = 1
-        self._options.parallel = 1
         self._options.hardware_mapping = mapping
         self._options.led_rgb_sequence = "BRG"
-#       self._options.gpio_slowdown = 0
-        self._options.drop_privileges = False
+        self._options.drop_privileges = False # prevents file r/w errors
 
         self._matrix = RGBMatrix(options=self._options)
-        self._current_image = Image.new('RGB', (self._matrix.width, self._matrix.height))
-        self._matrix.SetImage(self._current_image)
+        self._current_image = Image.new("RGB", (self._matrix.width, self._matrix.height))
 
-    def fade_in(self, image, delay=0.001, max_brightness=100):
-        while self._matrix.brightness < max_brightness:
-            self._matrix.brightness += 1
-            self._matrix.SetImage(image)
-            sleep(delay)
+    def set_image(self, image):
+        matrix_size = (self._matrix.width, self._matrix.height)
 
-    def fade_out(self, image, delay=0.001, min_brightness=0):
-        while self._matrix.brightness > min_brightness:
-            self._matrix.brightness -= 1
-            self._matrix.SetImage(image)
-            sleep(delay)
+        if image.size != matrix_size:
+            image.thumbnail(matrix_size, Image.Resampling.LANCZOS)
 
-    def dim(self, brightness):
-        self.fade_out(self._current_image, min_brightness=brightness)
-
-    def brighten(self, brightness=100):
-        self.fade_in(self._current_image, max_brightness=brightness)
-
-    def set_image(self, image, brightness=100):
-        if image.size != (self._matrix.width, self._matrix.height):
-            image = image.resize((self._matrix.width, self._matrix.height), resample=Image.Resampling.LANCZOS).convert('RGB')
-
-        self.dim()
-        self.fade_in(image, max_brightness=brightness)
+        self._matrix.SetImage(image)
         self._current_image = image
 
-    def set_image_url(self, url):
-        image = Image.open(requests.get(url, stream=True).raw)
-        self.set_image(image)
+    def brighten(self, delay=0.001, max_brightness=100):
+        while self._matrix.brightness < max_brightness:
+            self._matrix.brightness += 1
+            self._matrix.SetImage(self._current_image)
+            sleep(delay)
 
-    def clear(self):  
-        self._matrix.Clear()
+    def dim(self, delay=0.001, min_brightness=0):
+        while self._matrix.brightness > min_brightness:
+            self._matrix.brightness -= 1
+            self._matrix.SetImage(self._current_image)
+            sleep(delay)
+
+    def transition(self, new_image, delay=0.001, max_brightness=100):
+        self.dim()
+        self.set_image(new_image)
+        self.brighten(delay=delay, max_brightness=max_brightness)

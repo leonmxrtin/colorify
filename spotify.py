@@ -1,3 +1,6 @@
+from PIL import Image
+import requests
+
 import spotipy
 
 class SpotifyClient():
@@ -18,3 +21,6 @@ class SpotifyClient():
             timestamp = 0
 
         return is_playing, artwork_url, timestamp
+    
+    def fetch_artwork(self, artwork_url):
+        return Image.open(requests.get(artwork_url, stream=True).raw)
