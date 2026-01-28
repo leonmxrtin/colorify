@@ -3,12 +3,11 @@ from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 class MatrixController():
-    def __init__(self, size, mapping):
+    def __init__(self, options):
         self._options = RGBMatrixOptions()
-        self._options.rows = self._options.cols = size
-        self._options.hardware_mapping = mapping
-        self._options.led_rgb_sequence = "BRG"
         self._options.drop_privileges = False # prevents file r/w errors
+        for key, value in options.items():
+            setattr(self._options, key, value)
 
         self._matrix = RGBMatrix(options=self._options)
         self._current_image = Image.new("RGB", (self._matrix.width, self._matrix.height))
@@ -25,7 +24,7 @@ class MatrixController():
     def brighten(self, delay=0.001, max_brightness=100):
         while self._matrix.brightness < max_brightness:
             self._matrix.brightness += 1
-            self._matrix.SetImage(self._current_image)
+            self._matrix.SetImage(self._current_image) # we need to refresh the image for brightness to change
             sleep(delay)
 
     def dim(self, delay=0.001, min_brightness=0):

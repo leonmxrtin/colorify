@@ -163,3 +163,4 @@ cython_debug/
 config.ini
 token.json
 emulator_config.json
+config.py
